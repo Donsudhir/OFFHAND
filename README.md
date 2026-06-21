@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OFFHAND — Complex, made offhand.
 
-## Getting Started
+> The website **is** the proof of work. OFFHAND is a digital agency; this site is an
+> immersive, procedurally-rendered experience that demonstrates everything we build.
 
-First, run the development server:
+Built with **Next.js + React Three Fiber**, fully procedural (no external 3D assets),
+with a synthesized Web Audio layer and a brutalist "OFFHAND OS" art direction.
+
+## The experience (v1 — "OFFHAND OS")
+
+A single scroll-driven journey:
+
+1. **Cold Boot** — a phosphor CRT terminal boots "OFFHAND OS" and assembles the wordmark.
+2. **The Machine Room** — fly a hall of 8 service monoliths wired to a pulsing core.
+3. **The 8 dives** — dock into each service's live screen, each with a deep-dive:
+   Websites · CRM · Marketing · Social · Ads · AI Automation · SaaS · Digital Presence.
+4. **The Handoff** — "HANDS OFF. WE'VE GOT IT." → start your build.
+
+Includes an always-on HUD, a custom crosshair cursor, synthesized sound (muted by
+default), and reduced-motion + SEO fallbacks.
+
+## Tech
+
+- **Next.js 16** (App Router, TypeScript, Turbopack)
+- **React Three Fiber** + **drei** + **@react-three/postprocessing**
+- **GSAP** + **Lenis** (smooth scroll) + **Zustand** (cross-canvas state)
+- Hand-authored CSS (no Tailwind) for precise brutalist control
+
+## Run locally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```bash
+npm run build    # production build
+npm start        # serve the production build
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+  app/           # Next.js app router, global styles, layout
+  components/
+    boot/        # Act 0 — cold boot
+    three/       # Machine Room scene + camera rig
+    screens/     # docked module screens + the 8 inner worlds
+    scroll/      # Lenis scroll controller
+    hud/         # OS HUD overlay
+    cursor/      # custom crosshair cursor
+    cta/         # Act 3 — handoff / CTA
+  config/        # modules, layout, journey timeline
+  state/         # zustand store
+  audio/         # synthesized Web Audio
+docs/            # canonical brief, build log, art direction
+public/
+  moodboard.html # v2 warm art-direction style tiles
+```
 
-## Learn More
+## Documentation
 
-To learn more about Next.js, take a look at the following resources:
+- [`docs/00-MASTER-BRIEF.md`](docs/00-MASTER-BRIEF.md) — canonical spec
+- [`docs/01-BUILD-LOG.md`](docs/01-BUILD-LOG.md) — chronological build log
+- [`docs/02-OPEN-QUESTIONS.md`](docs/02-OPEN-QUESTIONS.md) — decisions & open items
+- [`docs/03-ART-DIRECTION-V2.md`](docs/03-ART-DIRECTION-V2.md) — warm "one-of-one" redesign direction
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+© 2026 OFFHAND. All rights reserved.

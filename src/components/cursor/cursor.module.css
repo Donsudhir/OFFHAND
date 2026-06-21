@@ -1,0 +1,88 @@
+/* OFFHAND OS — custom crosshair cursor */
+
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-cursor);
+  pointer-events: none;
+  color: var(--fg);
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
+
+.cross {
+  position: relative;
+  width: 26px;
+  height: 26px;
+}
+.cross::before,
+.cross::after {
+  content: "";
+  position: absolute;
+  background: currentColor;
+}
+/* vertical */
+.cross::before {
+  left: 50%;
+  top: 0;
+  width: 1.5px;
+  height: 26px;
+  transform: translateX(-50%);
+}
+/* horizontal */
+.cross::after {
+  top: 50%;
+  left: 0;
+  height: 1.5px;
+  width: 26px;
+  transform: translateY(-50%);
+}
+
+/* center knockout dot */
+.dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  background: var(--bg);
+  border: 1.5px solid currentColor;
+  transform: translate(-50%, -50%);
+}
+
+.label {
+  position: absolute;
+  left: 20px;
+  top: 14px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: currentColor;
+}
+.coord {
+  position: absolute;
+  left: 20px;
+  top: -24px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  opacity: 0.55;
+  white-space: nowrap;
+}
+
+/* "dive" emphasis */
+.cursor[data-mode="dive"] .cross {
+  transform: rotate(45deg);
+}
+.cursor[data-mode="dive"] .dot {
+  background: var(--accent);
+}
+
+@media (pointer: coarse) {
+  .cursor {
+    display: none;
+  }
+}

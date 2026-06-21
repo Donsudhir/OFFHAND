@@ -1,0 +1,148 @@
+/* OFFHAND OS — HUD overlay (DOM, sits above the canvas) */
+
+.hud {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-hud);
+  pointer-events: none;
+  font-family: var(--font-mono);
+  color: var(--fg);
+  mix-blend-mode: normal;
+}
+
+/* Framed border just inside the viewport edge. */
+.frame {
+  position: absolute;
+  inset: var(--hud-pad);
+  border: var(--border-w) solid var(--fg);
+  opacity: 0.55;
+  transition: opacity var(--dur-med) var(--ease-mech),
+    border-color var(--dur-slow) var(--ease-mech);
+}
+
+/* Corner ticks (L-brackets) drawn at each frame corner. */
+.tick {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: var(--border-w) solid var(--fg);
+}
+.tl {
+  top: calc(var(--hud-pad) - 1px);
+  left: calc(var(--hud-pad) - 1px);
+  border-right: 0;
+  border-bottom: 0;
+}
+.tr {
+  top: calc(var(--hud-pad) - 1px);
+  right: calc(var(--hud-pad) - 1px);
+  border-left: 0;
+  border-bottom: 0;
+}
+.bl {
+  bottom: calc(var(--hud-pad) - 1px);
+  left: calc(var(--hud-pad) - 1px);
+  border-right: 0;
+  border-top: 0;
+}
+.br {
+  bottom: calc(var(--hud-pad) - 1px);
+  right: calc(var(--hud-pad) - 1px);
+  border-left: 0;
+  border-top: 0;
+}
+
+/* Corner readout blocks. */
+.corner {
+  position: absolute;
+  padding: calc(var(--hud-pad) + 10px);
+  font-size: var(--t-hud);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.cTL {
+  top: 0;
+  left: 0;
+  text-align: left;
+}
+.cTR {
+  top: 0;
+  right: 0;
+  text-align: right;
+}
+.cBL {
+  bottom: 0;
+  left: 0;
+  text-align: left;
+}
+.cBR {
+  bottom: 0;
+  right: 0;
+  text-align: right;
+}
+
+.dim {
+  opacity: 0.5;
+}
+
+.blink {
+  animation: blink 1.1s steps(1) infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0.18;
+  }
+}
+
+/* Accent dot used for live/status indicators. */
+.dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: var(--accent);
+  margin-right: 6px;
+  vertical-align: middle;
+  box-shadow: 0 0 8px var(--accent);
+}
+
+/* Sound toggle — the one interactive HUD control. */
+.sound {
+  position: absolute;
+  bottom: calc(var(--hud-pad) + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: auto;
+  font-family: var(--font-mono);
+  font-size: var(--t-hud);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg);
+  border: var(--border-w) solid var(--fg);
+  padding: 6px 12px;
+  background: transparent;
+  transition: background var(--dur-fast) var(--ease-snap),
+    color var(--dur-fast) var(--ease-snap);
+}
+.sound:hover {
+  background: var(--accent);
+  color: var(--ink);
+}
+
+/* Center scroll progress meter (bottom). */
+.meter {
+  position: absolute;
+  bottom: calc(var(--hud-pad) + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(34vw, 320px);
+  height: 0;
+  display: none; /* enabled once live */
+}
+
+/* Hide HUD detail while booting; only show minimal frame. */
+.hud[data-phase="boot"] .meter,
+.hud[data-phase="boot"] .sound {
+  display: none;
+}
