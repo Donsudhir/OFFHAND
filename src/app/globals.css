@@ -1,64 +1,74 @@
 /* ============================================================
-   OFFHAND OS — Design Tokens & Global Brutalist Base
-   Palettes: "Newsprint Acid" (world) + "Phosphor Terminal" (boot)
+   OFFHAND — Design Tokens & Global Base (v2 · Warm / Premium / Calm)
+   Palette A "Bone & Honey". Editorial serif + humanist sans.
+   "Hide the cockpit. Show the craft."
    ============================================================ */
 
 :root {
-  /* --- World palette: Newsprint Acid --- */
-  --paper: #ede8df;
-  --paper-2: #e3ddd1; /* deeper paper for panels */
-  --ink: #0b0b0b;
-  --ink-soft: #1c1c1a;
-  --acid: #c8ff00;
-  --electric: #4d5dff; /* alt accent */
-  --concrete: #8a8a86;
-  --rule: rgba(11, 11, 11, 0.16); /* hairline rules on paper */
+  /* --- Palette A: Bone & Honey --- */
+  --paper: #efe7d6; /* warm bone page */
+  --paper-2: #e7ddc8; /* deeper oat panel */
+  --oat: #e3d7bd;
+  --sand: #d9c8a4;
+  --ink: #2a2118; /* espresso (replaces pure black) */
+  --ink-soft: #4a3f31;
+  --honey: #d99a4e; /* primary warm accent */
+  --clay: #b06a43; /* secondary warm accent */
+  --cream: #f6efe0; /* lightest highlight */
+  --concrete: #a99c84;
+  --rule: rgba(42, 33, 24, 0.16);
 
-  /* --- Boot palette: Phosphor Terminal --- */
-  --void: #0a0a0a;
-  --phosphor: #00ff88;
-  --phosphor-dim: #0c8f4d;
-  --amber: #ffb000;
+  /* --- Backward-compatible aliases (warm now) --- */
+  --acid: var(--honey);
+  --void: #1c150d;
+  --phosphor: var(--honey);
 
-  /* --- Semantic (default = world) --- */
+  /* --- Semantic --- */
   --bg: var(--paper);
   --fg: var(--ink);
-  --accent: var(--acid);
+  --accent: var(--honey);
 
   /* --- Type --- */
-  --font-display: var(--font-archivo), "Arial Narrow", system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-hanken), system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-jbmono), "Courier New", monospace;
+  /* legacy name → now editorial serif so any old ref reads warm */
+  --font-display: var(--font-serif);
 
-  /* Fluid type scale (clamp: min, vw, max) */
+  /* Fluid type scale */
   --t-hud: 11px;
-  --t-label: clamp(10px, 0.8vw, 13px);
-  --t-body: clamp(14px, 1.05vw, 17px);
-  --t-h3: clamp(20px, 2.2vw, 30px);
-  --t-h2: clamp(34px, 5vw, 64px);
-  --t-h1: clamp(48px, 9vw, 150px);
-  --t-mega: clamp(64px, 16vw, 280px);
+  --t-label: clamp(11px, 0.85vw, 13px);
+  --t-body: clamp(15px, 1.1vw, 18px);
+  --t-lede: clamp(18px, 1.9vw, 26px);
+  --t-h3: clamp(22px, 2.4vw, 32px);
+  --t-h2: clamp(30px, 4.6vw, 58px);
+  --t-h1: clamp(40px, 7vw, 104px);
+  --t-mega: clamp(56px, 12vw, 200px);
 
-  /* --- Spacing scale (brutalist hard steps) --- */
+  /* --- Spacing scale (calm, generous) --- */
   --s-1: 4px;
   --s-2: 8px;
   --s-3: 16px;
-  --s-4: 24px;
-  --s-5: 40px;
-  --s-6: 64px;
-  --s-7: 104px;
-  --s-8: 168px;
+  --s-4: 28px;
+  --s-5: 48px;
+  --s-6: 80px;
+  --s-7: 128px;
+  --s-8: 200px;
 
   /* --- Geometry --- */
-  --hud-pad: clamp(12px, 1.6vw, 22px);
-  --border-w: 1.5px;
-  --tick: 9px;
+  --hud-pad: clamp(16px, 1.8vw, 26px);
+  --border-w: 1px;
+  --radius: 4px;
+  --maxw: 1180px;
 
-  /* --- Motion --- */
-  --ease-snap: cubic-bezier(0.2, 0.9, 0.1, 1); /* fast in, hard stop */
-  --ease-mech: cubic-bezier(0.85, 0, 0.15, 1); /* mechanical in-out */
-  --dur-fast: 0.18s;
-  --dur-med: 0.42s;
-  --dur-slow: 0.9s;
+  /* --- Motion (calm, confident, breathing) --- */
+  --ease-calm: cubic-bezier(0.22, 1, 0.36, 1); /* soft settle */
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-snap: cubic-bezier(0.22, 1, 0.36, 1); /* legacy alias → now calm */
+  --ease-mech: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 0.3s;
+  --dur-med: 0.7s;
+  --dur-slow: 1.4s;
 
   /* --- Layers --- */
   --z-canvas: 0;
@@ -66,14 +76,7 @@
   --z-hud: 20;
   --z-cursor: 50;
 
-  color-scheme: dark;
-}
-
-/* Boot mode: flip semantic tokens to the phosphor terminal palette. */
-:root[data-mode="boot"] {
-  --bg: var(--void);
-  --fg: var(--phosphor);
-  --accent: var(--phosphor);
+  color-scheme: light;
 }
 
 /* ============================================================
@@ -98,18 +101,30 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
 }
 
 body {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: var(--t-body);
-  line-height: 1.4;
+  line-height: 1.55;
   background: var(--bg);
   color: var(--fg);
   overflow-x: hidden;
-  letter-spacing: 0.01em;
-  transition: background var(--dur-slow) var(--ease-mech),
-    color var(--dur-slow) var(--ease-mech);
+  transition: background var(--dur-slow) var(--ease-smooth),
+    color var(--dur-slow) var(--ease-smooth);
+}
+
+/* Soft paper grain over everything (the "crafted" texture). */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.4;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
 }
 
 a {
@@ -134,11 +149,18 @@ button {
    Typographic primitives
    ============================================================ */
 .display {
-  font-family: var(--font-display);
-  font-weight: 800;
+  font-family: var(--font-serif);
+  font-weight: 900;
   letter-spacing: -0.02em;
-  line-height: 0.92;
-  text-transform: uppercase;
+  line-height: 0.98;
+}
+.display em {
+  font-style: italic;
+  font-weight: 500;
+}
+
+.serif {
+  font-family: var(--font-serif);
 }
 
 .mono {
@@ -149,8 +171,13 @@ button {
 .label {
   font-family: var(--font-mono);
   font-size: var(--t-label);
-  letter-spacing: 0.14em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
+}
+
+::selection {
+  background: var(--honey);
+  color: var(--ink);
 }
 
 /* ============================================================

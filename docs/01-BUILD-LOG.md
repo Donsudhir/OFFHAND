@@ -3,6 +3,10 @@
 A running, chronological record of every build step so context is never lost.
 Newest entries at the bottom of each session.
 
+> **Published to GitHub** — `git@github.com:Donsudhir/OFFHAND.git` (branch `main`,
+> commit `0cf1625`, 2026-06-21). v1 cinematic "OFFHAND OS" snapshotted before the v2
+> warm "one-of-one" redesign begins. Remote `origin` set; `main` tracks `origin/main`.
+
 ---
 
 ## Session 1 — 2026-06-21 — Foundation
@@ -199,3 +203,44 @@ identical.
 - Deeper mobile tuning (tap-to-expand deep-dive); cross-browser audio test.
 - Replace placeholder stats/copy with real OFFHAND numbers when available.
 
+
+---
+
+## Session 4 — 2026-06-21 — v2 build + cinematic restore
+
+### v2 aesthetic pivot (warm / premium / calm) — BUILT
+Reskinned the soul (kept the R3F engine) per `docs/03-ART-DIRECTION-V2.md`:
+- `globals.css` — Palette A "Bone & Honey" tokens (paper #efe7d6, espresso #2a2118,
+  honey #d99a4e, clay #b06a43); editorial serif + humanist sans; calm easings; paper grain.
+- `layout.tsx` — fonts Fraunces (display) + Hanken Grotesk (body) + JetBrains Mono (accent);
+  warm metadata/title "You do your craft. We do the rest."
+- `config/services.ts` — services rewritten as plain-language OUTCOMES + STEPS + FAQS + WHISPERS.
+- `components/site/Atelier.tsx` — "The Atelier at Daybreak" 3D world.
+- `components/site/Landing.tsx` + `site.module.css` — editorial landing (hero, story, services,
+  steps, trust, FAQ, CTA, footer); `Site.tsx`; `page.tsx` → `<Site/>`.
+
+### Feedback: "too simple, not one-of-one, 3D/motion/art/cinema missing" — FIXED
+First v2 pass buried the 3D behind a scrim and read as a flat template. Rebuilt for cinema:
+- `useSiteScroll.ts` + `SmoothScroll.tsx` — Lenis smooth scroll → 0..1 progress store.
+- `Atelier.tsx` rebuilt as a **living miniature**: crafted little town on a worktable
+  (9 buildings incl. honey hero w/ glowing sign + chimney, lamps, trees, looping car, chimney
+  smoke, birds, dust), **scroll-driven cinematic camera** (Catmull-Rom fly: wide → into the
+  streets → pull-back finale), **daybreak sunrise** (sun climbs/warms, windows + lamps switch
+  on with scroll), tilt-shift **DepthOfField** + warm bloom + grain + vignette.
+- `Landing.tsx` — cinematic hero (masked line-by-line reveal, floating live-activity chip),
+  transparent **interludes** between opaque content bands so the evolving 3D shows through,
+  CTA over the 3D finale. Full-bleed `.band` panels keep copy readable.
+
+### Validation (Playwright + screenshots)
+- Hero: big editorial serif over the warm lit diorama + activity chip — strong.
+- Mid: camera flew INTO the streets, hero building lit, interlude line overlaid — cinematic.
+- Finale: pull-back to the whole glowing town behind "Become the one-of-one." + CTAs.
+- `npx tsc --noEmit` clean. Dev server clean (only harmless THREE.Clock + PCFSoftShadowMap
+  deprecation warnings).
+
+### Notes / follow-ups
+- v1 cinematic "OFFHAND OS" components remain in `src/components/` (boot/three/screens/hud/
+  cursor/cta) but are no longer mounted; kept for reference/reuse. Can be pruned later.
+- Contact = mailto stubs (hello@offhand.studio) — swap for real booking link.
+- Optional: per-service "scene" focus as you pass each (camera could frame a building per
+  service), real testimonials/faces when available, deeper mobile tuning.
