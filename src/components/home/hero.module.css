@@ -1,0 +1,548 @@
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(90px, 14vh, 160px) clamp(20px, 5vw, 80px)
+    clamp(64px, 9vh, 110px) clamp(16px, 3.5vw, 56px);
+  overflow: hidden;
+}
+
+/* ---------- Background video (de-greened) ---------- */
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Kill the green: full desaturate (grayscale(1) removes ALL hue).
+     Lightened a touch so the wave reads more clearly. */
+  filter: grayscale(1) contrast(1.05) brightness(0.72);
+  opacity: 0.6;
+}
+/* Darker layer masked over the top so it reads as graphite, never green. */
+.mask {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+      180deg,
+      rgba(8, 8, 10, 0.62) 0%,
+      rgba(8, 8, 10, 0.3) 40%,
+      rgba(8, 8, 10, 0.85) 100%
+    ),
+    radial-gradient(120% 90% at 50% 0%, rgba(255, 255, 255, 0.05), transparent 55%);
+  mix-blend-mode: multiply;
+}
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    120% 120% at 50% 45%,
+    transparent 42%,
+    rgba(8, 8, 10, 0.8) 100%
+  );
+}
+.grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(120% 90% at 50% 40%, #000 30%, transparent 75%);
+}
+
+/* ---------- Content ---------- */
+.inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(16px, 2.4vh, 28px);
+}
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  margin-bottom: clamp(18px, 3vh, 34px);
+  opacity: 0;
+  animation: fade 0.8s var(--ease-out) 0.1s forwards;
+}
+.kdot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--glow);
+}
+
+/* Cycling pill badge above the wordmark. */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px 8px 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(6px);
+  margin-bottom: clamp(18px, 3vh, 34px);
+  opacity: 0;
+  animation: fade 0.8s var(--ease-out) 0.1s forwards;
+}
+.badgeText {
+  position: relative;
+  display: inline-block;
+  height: 1.2em;
+  min-width: 29ch;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+.badgePhrase {
+  position: absolute;
+  inset: 0;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+}
+.badgePhrase[data-on="true"] {
+  opacity: 1;
+  transform: none;
+}
+@media (max-width: 520px) {
+  .badgeText {
+    min-width: 20ch;
+    font-size: 10px;
+  }
+}
+
+/* Headline (replaces the old wordmark). Each letter is a slot-machine reel that
+   spins through glyphs and halts on its target. */
+.headline {
+  --cell-h: 1.16em; /* window + cell height; roomy for ascenders/descenders */
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-size: clamp(32px, 5vw, 68px);
+  margin: 0;
+  color: var(--fg);
+  max-width: 18ch;
+}
+.line {
+  display: block;
+}
+.line + .line {
+  margin-top: 0.04em;
+}
+.space {
+  display: inline-block;
+  width: 0.3em;
+}
+
+/* One letter's reel: a fixed 1-glyph window that clips the spinning strip. */
+.reel {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  height: var(--cell-h);
+  line-height: var(--cell-h);
+}
+/* Invisible copy of the final glyph fixes the reel's width. */
+.reelGhost {
+  visibility: hidden;
+  display: inline-block;
+  height: var(--cell-h);
+}
+/* The vertical stack of glyphs that scrolls. Starts on the TOP cell and
+   translates up so the LAST cell (the target) halts in the window. */
+.reelStrip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateY(0);
+  /* Paused (showing the top glyph) until the headline is told to run — every
+     reel then starts together, no per-letter wave. */
+  animation: reelSpin 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-play-state: paused;
+}
+.headline[data-run="true"] .reelStrip {
+  animation-play-state: running;
+}
+.reelCell {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: var(--cell-h);
+  line-height: 1;
+}
+.reelAccent .reelStrip,
+.reelAccent .reelGhost {
+  background: var(--grad-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+/* Spin from top cell to the last cell. */
+@keyframes reelSpin {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc((var(--cells) - 1) * var(--cell-h) * -1));
+  }
+}
+/* Re-spin the reels on hover (distinct keyframe name so it actually restarts). */
+.headline:hover .reelStrip {
+  animation: reelSpinHover 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes reelSpinHover {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc((var(--cells) - 1) * var(--cell-h) * -1));
+  }
+}
+.headlineAccent {
+  background: var(--grad-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Reduced motion: snap straight to the target glyph, no spin. */
+@media (prefers-reduced-motion: reduce) {
+  .reelStrip,
+  .headline:hover .reelStrip {
+    animation: none;
+    transform: translateY(calc((var(--cells) - 1) * var(--cell-h) * -1));
+  }
+}
+
+/* Digital-eye video panel (left quarter). */
+.eye {
+  position: absolute;
+  left: clamp(20px, 4vw, 64px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  width: clamp(200px, 22vw, 320px);
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  opacity: 0;
+  animation: fade 1s var(--ease-out) 0.5s forwards;
+}
+@media (min-width: 860px) {
+  .eye {
+    display: flex;
+  }
+}
+.eyeFrame {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border: 1px solid var(--line-2);
+  border-radius: 0;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.6);
+}
+.eyeVideo {
+  position: absolute;
+  /* Oversize + shift up-left so the bottom-right watermark is cropped OUT
+     of the visible frame (container clips it away). */
+  width: 128%;
+  height: 128%;
+  left: -6%;
+  top: -20%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.08) brightness(0.72);
+}
+.eyeMask {
+  position: absolute;
+  inset: 0;
+  /* Black mask: darken overall + extra-dark bottom-right as watermark insurance. */
+  background: linear-gradient(180deg, rgba(8, 8, 10, 0.35), rgba(8, 8, 10, 0.6)),
+    radial-gradient(90% 70% at 100% 100%, rgba(8, 8, 10, 0.95), transparent 60%);
+}
+.eyeScan {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.04) 0 1px,
+    transparent 1px 3px
+  );
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+.eyeLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+}
+.eyeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--glow);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* Erupting wordmark: each glyph rises out of a clipped mask. */
+.wordmark {
+  display: flex;
+  flex-wrap: wrap;
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.05em;
+  line-height: 0.82;
+  font-size: clamp(72px, 19vw, 320px);
+  margin: 0;
+}
+.glyphWrap {
+  display: inline-block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+.glyph {
+  display: inline-block;
+  transform: translateY(115%) rotate(6deg);
+  background: linear-gradient(180deg, #ffffff 0%, #7f8085 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: erupt 1s var(--ease-out) forwards;
+}
+@keyframes erupt {
+  to {
+    transform: translateY(0) rotate(0);
+  }
+}
+
+.sub {
+  max-width: 52ch;
+  margin: 0;
+  color: var(--fg-dim);
+  font-size: clamp(15px, 1.35vw, 20px);
+  line-height: 1.55;
+  opacity: 0;
+  animation: fade 0.9s var(--ease-out) 0.9s forwards;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  margin-top: clamp(8px, 1.4vh, 18px);
+  opacity: 0;
+  animation: fade 0.9s var(--ease-out) 1.05s forwards;
+}
+
+/* Arrow button styles now live in the reusable ArrowButton component
+   (src/components/common/arrowButton.module.css). */
+
+.ghost {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--line-2);
+  transition: color 0.3s, border-color 0.3s;
+}
+.ghost:hover {
+  color: var(--fg);
+  border-color: var(--accent);
+}
+
+/* Supporting hero visual: hover-reactive mini workflow chain. */
+.miniFlow {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: clamp(28px, 4vh, 52px);
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  animation: fade 0.9s var(--ease-out) 1.2s forwards;
+  transition: border-color 0.3s var(--ease-out);
+  color: var(--fg-mute);
+}
+.miniFlow:hover {
+  border-color: var(--line-3);
+}
+.flowStep {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.flowNode {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 0;
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--fg-dim);
+  transition: border-color 0.25s var(--ease-out), color 0.25s var(--ease-out),
+    transform 0.25s var(--ease-out);
+}
+.miniFlow:hover .flowNode {
+  color: var(--fg);
+}
+.flowNode:hover {
+  border-color: var(--accent);
+  color: var(--fg);
+  transform: translateY(-2px);
+}
+.flowDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--glow);
+}
+.flowWire {
+  width: 34px;
+  height: 8px;
+  color: var(--line-3);
+}
+@media (max-width: 640px) {
+  .miniFlow {
+    display: none;
+  }
+}
+
+.scrollHint {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--fg-mute);
+}
+.scrollDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--fg-mute);
+  position: relative;
+}
+.scrollDot::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: scrollDotPulse 2s var(--ease-out) infinite;
+}
+.scrollLine {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(var(--fg-mute), transparent);
+  transform-origin: top;
+  animation: scrollPulse 2s var(--ease-out) infinite;
+}
+.scrollLabel {
+  margin-top: 2px;
+}
+@keyframes scrollDotPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(0.6);
+  }
+}
+@keyframes scrollPulse {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fade {
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glyph {
+    animation: none;
+    transform: none;
+  }
+  .badge,
+  .sub,
+  .actions {
+    opacity: 1;
+    animation: none;
+  }
+  .scrollDot::after,
+  .scrollLine {
+    animation: none;
+  }
+}

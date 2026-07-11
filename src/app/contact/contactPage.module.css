@@ -1,0 +1,73 @@
+.grid {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: clamp(48px, 8vh, 90px) clamp(20px, 5vw, 80px) clamp(60px, 10vh, 120px);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(40px, 5vw, 80px);
+}
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: 1.3fr 0.7fr;
+    align-items: start;
+  }
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  position: sticky;
+  top: 120px;
+}
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--line);
+}
+.blockHead {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+}
+.block p {
+  color: var(--fg-dim);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.email {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(18px, 2vw, 26px);
+  letter-spacing: -0.02em;
+  color: var(--fg);
+  transition: color 0.3s;
+}
+.email:hover {
+  color: #fff;
+}
+.steps {
+  list-style: none;
+  counter-reset: step;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.steps li {
+  counter-increment: step;
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  color: var(--fg-dim);
+  font-size: 14px;
+}
+.steps li::before {
+  content: "0" counter(step);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent);
+}

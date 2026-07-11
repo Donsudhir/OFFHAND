@@ -1,0 +1,47 @@
+/* ============================================================
+   Journal — homepage articles section header (dark, matches page).
+   Card grid styles are reused from articles.module.css.
+   ============================================================ */
+
+.section {
+  position: relative;
+  padding: clamp(72px, 12vh, 160px) clamp(20px, 5vw, 80px);
+  max-width: 1320px;
+  margin: 0 auto;
+}
+.head {
+  max-width: 62ch;
+  margin-bottom: clamp(40px, 7vh, 72px);
+}
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  margin-bottom: 18px;
+}
+.eyebrow span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--glow);
+}
+.title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.06;
+  font-size: var(--t-section);
+  color: var(--fg);
+}
+.lead {
+  margin-top: 18px;
+  color: var(--fg-dim);
+  font-size: clamp(15px, 1.3vw, 19px);
+  line-height: 1.6;
+}

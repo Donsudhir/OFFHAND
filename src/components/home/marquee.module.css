@@ -1,0 +1,74 @@
+.wrap {
+  position: relative;
+  padding: 40px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-2);
+  overflow: hidden;
+}
+.label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 28px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+}
+.tick {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.marquee {
+  display: flex;
+  width: max-content;
+}
+.track {
+  display: flex;
+  align-items: center;
+  gap: clamp(36px, 6vw, 80px);
+  padding-right: clamp(36px, 6vw, 80px);
+  animation: scroll 34s linear infinite;
+}
+@keyframes scroll {
+  to {
+    transform: translateX(-100%);
+  }
+}
+.marquee:hover .track {
+  animation-play-state: paused;
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(20px, 2.4vw, 34px);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+  white-space: nowrap;
+  transition: color 0.3s var(--ease-out);
+}
+.item:hover {
+  color: var(--fg);
+}
+.mark {
+  width: clamp(20px, 2vw, 28px);
+  height: clamp(20px, 2vw, 28px);
+  opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+}
