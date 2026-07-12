@@ -40,7 +40,7 @@ const ultra = Ultra({
 const jbMono = JetBrains_Mono({
   variable: "--font-jbmono",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
+  weight: ["400", "500"],
   display: "swap",
 });
 
@@ -50,20 +50,20 @@ export const metadata: Metadata = {
     "OFFHAND is a digital agency that builds websites, CRMs, automations, ads and SaaS tools. Complex digital systems, made effortless.",
   applicationName: "OFFHAND OS",
   keywords: [
-    "digital agency",
-    "web development",
-    "CRM",
-    "AI automation",
-    "SaaS",
-    "digital marketing",
-    "ads",
+    "digital agency for small business",
+    "get more customers",
+    "website design",
+    "lead generation",
+    "marketing for small business",
     "social media management",
+    "google ads",
+    "business automation",
   ],
   authors: [{ name: "OFFHAND" }],
   openGraph: {
     title: "OFFHAND · Complex, made offhand.",
     description:
-      "A digital agency that makes complex digital systems look effortless.",
+      "We bring you customers and quietly run everything online, so you can focus on the work only you can do.",
     type: "website",
   },
 };
@@ -72,7 +72,6 @@ export const viewport: Viewport = {
   themeColor: "#060607",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
 };
 
 export default function RootLayout({
