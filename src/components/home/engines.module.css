@@ -1,0 +1,78 @@
+.section {
+  position: relative;
+  padding: clamp(40px, 7vh, 90px) clamp(20px, 5vw, 80px);
+}
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(28px, 5vh, 56px);
+  text-align: center;
+}
+.lead {
+  max-width: 46ch;
+  color: var(--fg-dim);
+  font-size: clamp(14px, 1.3vw, 18px);
+  line-height: 1.55;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+}
+.container[data-inview="true"] .lead {
+  opacity: 1;
+  transform: none;
+}
+
+/* Overlapping circular cluster of brand marks. */
+.cluster {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: clamp(14px, 2vw, 24px); /* balance the negative overlap */
+}
+.orb {
+  width: clamp(58px, 6vw, 78px);
+  height: clamp(58px, 6vw, 78px);
+  margin-left: clamp(-18px, -1.6vw, -14px);
+  border-radius: 50%;
+  border: 1px solid var(--line-2);
+  background: var(--surface);
+  display: grid;
+  place-items: center;
+  color: var(--fg);
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  will-change: opacity, transform;
+  /* Hidden until revealed left -> right. */
+  opacity: 0;
+  transform: translateX(-40px) scale(0.8);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out),
+    border-color 0.3s var(--ease-out), color 0.3s var(--ease-out);
+}
+.orb:first-child {
+  margin-left: 0;
+}
+.container[data-inview="true"] .orb {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+.orb:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-6px) scale(1.06);
+  z-index: 10 !important;
+}
+.mark {
+  width: 48%;
+  height: 48%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lead,
+  .orb {
+    opacity: 1;
+    transform: none;
+  }
+}

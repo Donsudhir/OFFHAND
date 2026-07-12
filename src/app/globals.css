@@ -5,32 +5,78 @@
    ============================================================ */
 
 :root {
-  /* --- Palette A: Bone & Honey --- */
-  --paper: #efe7d6; /* warm bone page */
-  --paper-2: #e7ddc8; /* deeper oat panel */
-  --oat: #e3d7bd;
-  --sand: #d9c8a4;
-  --ink: #2a2118; /* espresso (replaces pure black) */
-  --ink-soft: #4a3f31;
-  --honey: #d99a4e; /* primary warm accent */
-  --clay: #b06a43; /* secondary warm accent */
-  --cream: #f6efe0; /* lightest highlight */
-  --concrete: #a99c84;
-  --rule: rgba(42, 33, 24, 0.16);
+  /* ============================================================
+     OFFHAND — Monochrome ("Graphite") theme.
+     Dark, high-contrast, shades of grey with white/silver
+     gradient accents. No hue — only luminance.
+     ============================================================ */
 
-  /* --- Backward-compatible aliases (warm now) --- */
-  --acid: var(--honey);
-  --void: #1c150d;
-  --phosphor: var(--honey);
+  /* --- Surfaces (deep OLED slate → charcoal, softened off pure black) --- */
+  --bg: #09090b;
+  --bg-2: #0e0e12;
+  --surface: #121214;
+  --surface-2: #18181b;
+  --surface-3: #232327;
 
-  /* --- Semantic --- */
-  --bg: var(--paper);
-  --fg: var(--ink);
-  --accent: var(--honey);
+  /* --- Lines / hairlines (slightly stronger for separation) --- */
+  --line: rgba(255, 255, 255, 0.07);
+  --line-2: rgba(255, 255, 255, 0.14);
+  --line-3: rgba(255, 255, 255, 0.24);
+
+  /* --- Foreground (soft white → mute grey; never pure #fff) --- */
+  --fg: #f4f4f5;
+  --fg-dim: #a1a1aa;
+  --fg-mute: #71717a;
+
+  /* --- Accent: PURPLE is the signature gradient (violet → indigo).
+     Emerald / amber / blue are available as section-scoped secondary
+     accents. Used for CTAs, active states, glows, highlight keywords. --- */
+  --accent: #a855f7;
+  --accent-dim: #7c3aed;
+  --glow: rgba(168, 85, 247, 0.5);
+
+  /* Silver display gradient (big grotesque type stays luminous, faint violet). */
+  --grad-accent: linear-gradient(180deg, #ffffff 0%, #a7a3b8 100%);
+  /* Brand gradient — the main purple sweep (headings, CTAs, glows). */
+  --grad-brand: linear-gradient(120deg, #d8b4fe 0%, #a855f7 45%, #6366f1 100%);
+  /* Serif-keyword highlight (dual-font italic accent + hero reel accent). */
+  --grad-highlight: linear-gradient(120deg, #d8b4fe 0%, #9333ea 100%);
+  /* Section-scoped secondary accents. */
+  --grad-emerald: linear-gradient(120deg, #6ee7b7 0%, #10b981 100%);
+  --grad-amber: linear-gradient(120deg, #fcd34d 0%, #f59e0b 100%);
+  --grad-blue: linear-gradient(120deg, #93c5fd 0%, #3b82f6 100%);
+  --grad-rose: linear-gradient(120deg, #fda4af 0%, #f43f5e 100%);
+  --emerald: #34d399;
+  --amber-2: #f59e0b;
+  --blue: #60a5fa;
+  --rose: #fb7185;
+  --grad-panel: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0) 60%
+  );
+
+  /* --- Legacy token remap → grayscale ---
+     Old modules (machine room, boot, screens) reference these
+     names; remapping their values reskins them monochrome. */
+  --paper: #0e0e11;
+  --paper-2: #16161a;
+  --ink: #f4f4f2;
+  --ink-soft: #cfcfcf;
+  --acid: #a855f7; /* accent for legacy chart/plate fills */
+  --electric: #a855f7;
+  --concrete: #4c4d51;
+  --rule: rgba(255, 255, 255, 0.1);
+  --void: #08080a;
+  --phosphor: #d8d8d8; /* boot text grey */
+  --phosphor-dim: #6a6a6a;
+  --amber: #a855f7;
 
   /* --- Type --- */
-  --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
-  --font-sans: var(--font-hanken), system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-display-src), "Arial Black", system-ui, sans-serif;
+  --font-brand: var(--font-brand-src), "Rockwell", "Georgia", serif;
+  --font-serif: var(--font-serif-src), "Playfair Display", Georgia, serif;
+  --font-body: var(--font-body-src), system-ui, sans-serif;
   --font-mono: var(--font-jbmono), "Courier New", monospace;
   /* legacy name → now editorial serif so any old ref reads warm */
   --font-display: var(--font-serif);
@@ -56,27 +102,43 @@
   --s-8: 200px;
 
   /* --- Geometry --- */
-  --hud-pad: clamp(16px, 1.8vw, 26px);
-  --border-w: 1px;
-  --radius: 4px;
-  --maxw: 1180px;
+  --hud-pad: clamp(12px, 1.6vw, 22px);
+  --border-w: 1.5px;
+  --tick: 9px;
 
-  /* --- Motion (calm, confident, breathing) --- */
-  --ease-calm: cubic-bezier(0.22, 1, 0.36, 1); /* soft settle */
-  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-snap: cubic-bezier(0.22, 1, 0.36, 1); /* legacy alias → now calm */
-  --ease-mech: cubic-bezier(0.4, 0, 0.2, 1);
-  --dur-fast: 0.3s;
-  --dur-med: 0.7s;
-  --dur-slow: 1.4s;
+  /* --- Unified layout rhythm + heading (premium consistency pass) --- */
+  --section-pad-y: clamp(64px, 11vh, 130px);
+  --section-pad-x: clamp(20px, 5vw, 80px);
+  --content-max: 1320px;
+  --prose-max: 64ch;
+  /* One section-title size for the WHOLE site (hero is the sole exception). */
+  --t-section: clamp(30px, 4.2vw, 54px);
+  /* Sharp everywhere — brand is editorial/architectural, no soft corners. */
+  --radius: 0px;
+
+  /* --- Motion --- */
+  --ease-snap: cubic-bezier(0.2, 0.9, 0.1, 1); /* fast in, hard stop */
+  --ease-mech: cubic-bezier(0.85, 0, 0.15, 1); /* mechanical in-out */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* soft settle */
+  --dur-fast: 0.18s;
+  --dur-med: 0.42s;
+  --dur-slow: 0.9s;
 
   /* --- Layers --- */
   --z-canvas: 0;
   --z-overlay: 10;
   --z-hud: 20;
-  --z-cursor: 50;
+  --z-nav: 40;
+  --z-cursor: 60;
 
-  color-scheme: light;
+  color-scheme: dark;
+}
+
+/* Boot mode: keep the terminal dark; text is already grey. */
+:root[data-mode="boot"] {
+  --bg: var(--void);
+  --fg: var(--phosphor);
+  --accent: var(--phosphor);
 }
 
 /* ============================================================
@@ -92,7 +154,8 @@
 
 html,
 body {
-  height: 100%;
+  height: auto;
+  min-height: 100%;
 }
 
 html {
@@ -105,31 +168,45 @@ html {
 }
 
 body {
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   font-size: var(--t-body);
-  line-height: 1.55;
+  line-height: 1.5;
   background: var(--bg);
   color: var(--fg);
-  overflow-x: hidden;
-  transition: background var(--dur-slow) var(--ease-smooth),
-    color var(--dur-slow) var(--ease-smooth);
-}
-
-/* Soft paper grain over everything (the "crafted" texture). */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  pointer-events: none;
-  opacity: 0.4;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+  /* `clip` (not `hidden`) so the body does NOT become a scroll container.
+     `overflow-x: hidden` would force overflow-y to compute as `auto`, turning
+     body into a scroller that clips the .page bottom margin — which hides the
+     fixed reveal footer. `clip` prevents horizontal scroll without that side
+     effect, so the footer reveal space is preserved. */
+  overflow-x: clip;
+  letter-spacing: 0.005em;
+  transition: background var(--dur-slow) var(--ease-mech),
+    color var(--dur-slow) var(--ease-mech);
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* Global media safety net — never let media overflow its container. */
+img,
+svg,
+video,
+canvas,
+picture {
+  max-width: 100%;
+}
+
+/* Very small screens: tighten the global spacing scale so fixed gaps/paddings
+   built on these tokens shrink proportionally (no manual per-file edits). */
+@media (max-width: 480px) {
+  :root {
+    --s-5: 28px;
+    --s-6: 40px;
+    --s-7: 64px;
+    --s-8: 96px;
+  }
 }
 
 button {
@@ -142,25 +219,55 @@ button {
 
 ::selection {
   background: var(--accent);
-  color: var(--ink);
+  color: #08080a;
 }
 
 /* ============================================================
    Typographic primitives
    ============================================================ */
 .display {
-  font-family: var(--font-serif);
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  line-height: 0.98;
-}
-.display em {
-  font-style: italic;
-  font-weight: 500;
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.9;
+  text-transform: uppercase;
 }
 
-.serif {
+.grad-text {
+  background: var(--grad-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Dual-font premium heading accent: an editorial serif italic keyword,
+   filled with the brand purple gradient. Drop inside any heading:
+   <h1>Structure. <em class="serifAccent">Designed for humans.</em></h1> */
+.serifAccent {
   font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: -0.01em;
+  background: var(--grad-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.serifAccent.emerald {
+  background: var(--grad-emerald);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.serifAccent.amber {
+  background: var(--grad-amber);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.serifAccent.blue {
+  background: var(--grad-blue);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 .mono {
@@ -178,6 +285,78 @@ button {
 ::selection {
   background: var(--honey);
   color: var(--ink);
+}
+
+/* ============================================================
+   Unified section heading — ONE recipe reused across every section.
+   Editorial sentence-case, medium weight, brand-consistent size.
+   ============================================================ */
+.sectionTitle {
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: -0.02em;
+  line-height: 1.06;
+  font-size: var(--t-section);
+  color: var(--fg);
+}
+
+/* ============================================================
+   Purple-gradient touch-ups — subtle animated accents used sparingly
+   (a hairline here, a border there) to keep the brand present in every
+   section without over-saturating the monochrome base.
+   ============================================================ */
+@keyframes gradPan {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+/* Thin animated purple gradient hairline (drop into a header). */
+.accentRule {
+  height: 2px;
+  width: 100%;
+  border: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #a855f7 25%,
+    #6366f1 50%,
+    #a855f7 75%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: gradPan 6s linear infinite;
+  opacity: 0.7;
+}
+/* Animated purple gradient border frame (for one hero element per view). */
+.accentFrame {
+  position: relative;
+  isolation: isolate;
+}
+.accentFrame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    120deg,
+    rgba(168, 85, 247, 0.7),
+    rgba(99, 102, 241, 0.25) 40%,
+    rgba(168, 85, 247, 0) 60%,
+    rgba(168, 85, 247, 0.6)
+  );
+  background-size: 220% 220%;
+  animation: gradPan 8s linear infinite;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+@media (prefers-reduced-motion: reduce) {
+  .accentRule,
+  .accentFrame::after {
+    animation: none;
+  }
 }
 
 /* ============================================================
@@ -249,4 +428,298 @@ html.lenis body {
 }
 .lenis.lenis-stopped {
   overflow: hidden;
+}
+
+/* ============================================================
+   Monochrome utility layer (new marketing site)
+   ============================================================ */
+
+/* Page shell (scrollable marketing site, not the fixed canvas) */
+.page {
+  position: relative;
+  width: 100%;
+  z-index: 1;
+  background: var(--bg);
+  color: var(--fg);
+  margin-bottom: var(--footer-h, min(66vh, 520px));
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+}
+
+/* ============================================================
+   Per-page themes — vary the background between graphite (black
+   grainy), slate (grey grainy) and paper (whitish grainy), each
+   re-tuning fg/surface/line tokens so contrast stays strong.
+   Applied to the scrolling `.page` (main) via PageShell.
+   ============================================================ */
+
+/* Shared film-grain overlay (subtle, fixed so it doesn't crawl). */
+.themeGraphite::before,
+.themeSlate::before,
+.themePaper::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+/* ---- Graphite: near-black grainy (default dark, more texture) ---- */
+.themeGraphite {
+  --bg: #0a0a0c;
+  --bg-2: #101014;
+}
+.themeGraphite::before {
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+}
+
+/* ---- Slate: mid-grey grainy, light text ---- */
+.themeSlate {
+  --bg: #2a2a30;
+  --bg-2: #232329;
+  --surface: #34343b;
+  --surface-2: #3d3d45;
+  --surface-3: #4a4a53;
+  --line: rgba(255, 255, 255, 0.12);
+  --line-2: rgba(255, 255, 255, 0.2);
+  --line-3: rgba(255, 255, 255, 0.32);
+  --fg: #f7f7f5;
+  --fg-dim: #c6c6ca;
+  --fg-mute: #8d8d94;
+  --grad-panel: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0) 60%
+  );
+}
+.themeSlate::before {
+  opacity: 0.07;
+  mix-blend-mode: soft-light;
+}
+
+/* ---- Paper: warm off-white grainy, dark text ---- */
+.themePaper {
+  --bg: #ecebe4;
+  --bg-2: #e4e2da;
+  --surface: #f4f2ec;
+  --surface-2: #e9e7df;
+  --surface-3: #dddbd2;
+  --line: rgba(20, 20, 24, 0.12);
+  --line-2: rgba(20, 20, 24, 0.2);
+  --line-3: rgba(20, 20, 24, 0.32);
+  --fg: #17171a;
+  --fg-dim: #4c4c52;
+  --fg-mute: #7c7c82;
+  --accent-dim: #7c3aed;
+  --glow: rgba(168, 85, 247, 0.35);
+  --grad-accent: linear-gradient(180deg, #1a1a1e 0%, #55555c 100%);
+  --grad-highlight: linear-gradient(120deg, #9333ea 0%, #6366f1 100%);
+  --grad-panel: linear-gradient(
+    160deg,
+    rgba(20, 20, 24, 0.05) 0%,
+    rgba(20, 20, 24, 0) 60%
+  );
+  color-scheme: light;
+}
+.themePaper::before {
+  opacity: 0.06;
+  mix-blend-mode: multiply;
+}
+/* On paper, ::selection stays legible. */
+.themePaper ::selection {
+  background: var(--accent);
+  color: #17171a;
+}
+
+
+.section {
+  position: relative;
+  width: 100%;
+  padding: clamp(72px, 12vh, 160px) clamp(20px, 5vw, 80px);
+}
+.container {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+/* Eyebrow / section kicker */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+.eyebrow::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--glow);
+}
+
+/* Headings */
+.h-mega {
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+  line-height: 0.86;
+  font-size: clamp(56px, 12vw, 200px);
+}
+.h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+  font-size: clamp(38px, 6vw, 84px);
+  text-transform: uppercase;
+}
+.h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+  font-size: clamp(28px, 4vw, 54px);
+  text-transform: uppercase;
+}
+.lead {
+  color: var(--fg-dim);
+  font-size: clamp(15px, 1.3vw, 20px);
+  line-height: 1.55;
+  max-width: 60ch;
+}
+
+/* Surface card */
+.card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 0;
+  overflow: hidden;
+}
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--grad-panel);
+  pointer-events: none;
+}
+
+/* Button (sharp corners) */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 22px;
+  border-radius: 0;
+  border: 1px solid var(--line-2);
+  background: var(--surface-2);
+  color: var(--fg);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  overflow: hidden;
+  isolation: isolate;
+  transition: color var(--dur-med) var(--ease-out),
+    border-color var(--dur-med) var(--ease-out);
+}
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--accent);
+  transform: translateY(101%);
+  transition: transform var(--dur-med) var(--ease-out);
+}
+.btn:hover {
+  color: #050505;
+  border-color: var(--accent);
+}
+.btn:hover::after {
+  transform: translateY(0);
+}
+.btn--solid {
+  background: var(--accent);
+  color: #050505;
+  border-color: var(--accent);
+}
+.btn--solid::after {
+  background: var(--surface-3);
+}
+.btn--solid:hover {
+  color: var(--fg);
+}
+
+/* Reveal-on-scroll primitive (JS toggles data-inview).
+   Fade + rise 24px, expo-out easing, once. */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+  transition-delay: var(--reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+[data-reveal][data-inview="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Staggered children: each direct child rises 24px, ~70ms apart. */
+[data-reveal-group] > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+}
+[data-reveal-group][data-inview="true"] > * {
+  opacity: 1;
+  transform: none;
+}
+[data-reveal-group][data-inview="true"] > *:nth-child(1) { transition-delay: 0ms; }
+[data-reveal-group][data-inview="true"] > *:nth-child(2) { transition-delay: 70ms; }
+[data-reveal-group][data-inview="true"] > *:nth-child(3) { transition-delay: 140ms; }
+[data-reveal-group][data-inview="true"] > *:nth-child(4) { transition-delay: 210ms; }
+[data-reveal-group][data-inview="true"] > *:nth-child(5) { transition-delay: 280ms; }
+[data-reveal-group][data-inview="true"] > *:nth-child(6) { transition-delay: 350ms; }
+[data-reveal-group][data-inview="true"] > *:nth-child(7) { transition-delay: 420ms; }
+[data-reveal-group][data-inview="true"] > *:nth-child(8) { transition-delay: 490ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  [data-reveal-group] > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Noise + grain overlay helper */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    #fff 0.5px,
+    transparent 0.5px
+  );
+  background-size: 3px 3px;
+}
+
+/* Hide native cursor when custom cursor active */
+.custom-cursor-active,
+.custom-cursor-active * {
+  cursor: none !important;
 }

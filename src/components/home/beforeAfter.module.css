@@ -1,0 +1,291 @@
+/* ============================================================
+   BeforeAfter — pinned scroll comparison.
+   Heading sits centred; as you scroll it drifts apart + vanishes
+   while the two cards rise into the same spot. Sharp corners.
+   ============================================================ */
+
+.wrap {
+  position: relative;
+  height: 230vh; /* scroll length while the stage is pinned */
+}
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: clamp(20px, 5vw, 80px);
+}
+.stage {
+  position: relative;
+  width: 100%;
+  max-width: 1040px;
+  display: grid;
+  place-items: center;
+}
+
+/* ---- Heading: Before  vs  After (absolutely centred in the stage) ---- */
+.heading {
+  grid-area: 1 / 1;
+  z-index: 2;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: clamp(16px, 2.5vw, 40px);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.06;
+  font-size: var(--t-section);
+  white-space: nowrap;
+  /* whole heading fades out once the cards take over */
+  opacity: calc(1 - clamp(0, (var(--spread, 0) - 0.4) * 1.9, 1));
+  pointer-events: none;
+  will-change: opacity;
+}
+.word {
+  color: color-mix(
+    in srgb,
+    var(--fg) calc((1 - var(--spread, 0)) * 100%),
+    var(--fg-mute)
+  );
+  will-change: transform;
+}
+.before {
+  /* slides off to the LEFT as you scroll */
+  transform: translateX(calc(var(--spread, 0) * -46vw));
+}
+.after {
+  /* slides off to the RIGHT as you scroll */
+  transform: translateX(calc(var(--spread, 0) * 46vw));
+}
+.vs {
+  font-size: 0.58em;
+  font-weight: 600;
+  color: var(--fg-mute);
+  font-style: italic;
+  opacity: calc(1 - var(--spread, 0) * 1.8);
+}
+
+/* ---- Cards grid (stacked in the same grid cell as the heading) ---- */
+.grid {
+  grid-area: 1 / 1;
+  z-index: 3;
+  width: 100%;
+  max-width: 860px; /* narrower cards */
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(14px, 1.6vw, 22px);
+  /* rise into place as --cp goes 0 → 1 */
+  opacity: var(--cp, 0);
+  transform: translateY(calc((1 - var(--cp, 0)) * 60px));
+  will-change: transform, opacity;
+}
+@media (min-width: 760px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.card {
+  position: relative;
+  border-radius: 0;
+  padding: clamp(20px, 2.4vw, 34px);
+  overflow: hidden;
+  isolation: isolate;
+  scale: 1;
+  transition: scale 0.3s var(--ease-out), box-shadow 0.35s var(--ease-out),
+    border-color 0.3s var(--ease-out);
+  will-change: scale;
+}
+
+/* Hover: the card grows and lifts over its neighbour with a soft glow. */
+.card:hover {
+  scale: 1.05;
+  z-index: 5;
+}
+
+/* BEFORE — darker graphite, muted */
+.cardBefore {
+  background: #131317;
+  border: 1px solid var(--line);
+}
+.cardBefore::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    transparent 55%
+  );
+  pointer-events: none;
+}
+.cardBefore:hover {
+  border-color: var(--line-2);
+  box-shadow: 0 30px 70px -34px rgba(0, 0, 0, 0.85);
+}
+
+/* AFTER — slightly lighter graphite (the "clarity" flip stays on-brand) */
+.cardAfter {
+  --grn: #34d399;
+  --grn-glow: rgba(52, 211, 153, 0.5);
+  background: linear-gradient(
+      165deg,
+      rgba(52, 211, 153, 0.1) 0%,
+      rgba(16, 185, 129, 0.03) 40%,
+      transparent 72%
+    ),
+    #14181a;
+  border: 1px solid rgba(52, 211, 153, 0.34);
+  box-shadow: 0 0 44px -26px var(--grn-glow), inset 0 0 40px -30px var(--grn-glow);
+}
+.cardAfter::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    120% 90% at 100% 0%,
+    rgba(52, 211, 153, 0.16) 0%,
+    transparent 55%
+  );
+  pointer-events: none;
+}
+.cardAfter:hover {
+  border-color: color-mix(in srgb, var(--grn) 60%, transparent);
+  box-shadow: 0 36px 90px -36px rgba(0, 0, 0, 0.9),
+    0 0 70px -14px var(--grn-glow), inset 0 0 46px -28px var(--grn-glow);
+}
+/* green "growth" corner accent */
+.corner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, #34d399 0%, rgba(52, 211, 153, 0.35) 34%, transparent 74%);
+  opacity: 0.7;
+  pointer-events: none;
+}
+.corner::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #34d399, transparent 70%);
+}
+
+/* ---- Card head ---- */
+.cardHead h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(20px, 2.2vw, 30px);
+  letter-spacing: -0.01em;
+  margin-bottom: 12px;
+}
+.cardHead p {
+  font-size: clamp(13.5px, 1.1vw, 15px);
+  line-height: 1.55;
+  max-width: 38ch;
+}
+.cardBefore .cardHead p {
+  color: var(--fg-dim);
+}
+.cardAfter .cardHead p {
+  color: var(--fg-dim);
+}
+.rule {
+  height: 1px;
+  margin: clamp(20px, 2.4vw, 30px) 0;
+}
+.cardBefore .rule {
+  background: var(--line);
+}
+.cardAfter .rule {
+  background: linear-gradient(90deg, rgba(52, 211, 153, 0.5), transparent 75%);
+}
+
+/* ---- Points ---- */
+.points {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 2.2vw, 26px);
+}
+.points li {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.icon {
+  flex: none;
+  width: clamp(38px, 3.4vw, 48px);
+  height: clamp(38px, 3.4vw, 48px);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+.icon svg {
+  width: 55%;
+  height: 55%;
+}
+.iconBad {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line-2);
+  color: var(--fg-mute);
+}
+.iconGood {
+  background: linear-gradient(160deg, rgba(52, 211, 153, 0.24), rgba(16, 185, 129, 0.08));
+  border: 1px solid rgba(52, 211, 153, 0.5);
+  color: #34d399;
+  box-shadow: 0 0 18px -6px var(--grn-glow);
+}
+.points b {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(16px, 1.5vw, 20px);
+  letter-spacing: -0.01em;
+  margin-bottom: 5px;
+}
+.points span {
+  font-size: clamp(13px, 1.1vw, 15px);
+  line-height: 1.5;
+}
+.cardBefore .points b {
+  color: var(--fg);
+}
+.cardBefore .points span {
+  color: var(--fg-dim);
+}
+.cardAfter .points b {
+  color: var(--fg);
+}
+.cardAfter .points span {
+  color: var(--fg-dim);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrap {
+    height: auto;
+  }
+  .sticky {
+    position: static;
+    height: auto;
+    padding: clamp(60px, 10vh, 120px) clamp(20px, 5vw, 80px);
+  }
+  .heading {
+    display: none;
+  }
+  .grid {
+    opacity: 1;
+    transform: none;
+  }
+  .card {
+    scale: 1;
+  }
+}

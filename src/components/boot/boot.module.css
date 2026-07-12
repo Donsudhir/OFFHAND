@@ -1,4 +1,4 @@
-/* OFFHAND OS — Act 0: Cold Boot (phosphor CRT terminal, DOM overlay) */
+/* OFFHAND — Preloader / Cold Boot (monochrome graphite CRT, DOM overlay) */
 
 .boot {
   position: fixed;
@@ -20,7 +20,7 @@
   width: min(860px, 92vw);
   max-height: 100svh;
   padding: clamp(14px, 3vw, 32px);
-  filter: drop-shadow(0 0 14px rgba(0, 255, 136, 0.25));
+  filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.18));
   transform: scale(1);
   transition: transform 0.4s var(--ease-mech);
 }
@@ -47,9 +47,9 @@
   inset: 0;
   background: radial-gradient(
     120% 120% at 50% 50%,
-    rgba(0, 255, 136, 0.05) 0%,
+    rgba(255, 255, 255, 0.05) 0%,
     rgba(0, 0, 0, 0) 45%,
-    rgba(0, 0, 0, 0.55) 100%
+    rgba(0, 0, 0, 0.6) 100%
   );
   pointer-events: none;
   z-index: 3;
@@ -79,8 +79,10 @@
   line-height: 1.5;
   letter-spacing: 0.04em;
   white-space: pre-wrap;
-  text-shadow: 0 0 6px rgba(0, 255, 136, 0.55);
-  min-height: 1.5em;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.35);
+  /* Reserve the full log height up-front so streaming lines never push the
+     wordmark down (keeps CLS at 0 during boot). 16 lines × 1.5em. */
+  min-height: 24em;
 }
 .line {
   display: block;
@@ -97,21 +99,59 @@
   position: relative;
   z-index: 1;
   margin-top: clamp(12px, 2.4vw, 26px);
-  font-family: var(--font-display);
-  font-weight: 900;
+  font-family: var(--font-brand);
+  font-weight: 400;
   text-transform: uppercase;
-  font-size: clamp(40px, 10.5vw, 124px);
+  font-size: clamp(44px, 11vw, 140px);
   line-height: 0.9;
-  letter-spacing: 0.01em;
-  text-shadow: 0 0 18px rgba(0, 255, 136, 0.5);
+  letter-spacing: 0.02em;
   display: flex;
   justify-content: flex-start;
-  gap: 0.01em;
+  gap: 0.02em;
+  /* Green glitch that judders then resolves to the silver wordmark. */
+  animation: wordGlitch 0.85s steps(2, jump-none) 0.95s both;
+}
+@keyframes wordGlitch {
+  0% {
+    filter: drop-shadow(0 0 0 transparent);
+    transform: translate(0, 0);
+  }
+  8% {
+    filter: drop-shadow(-3px 0 0 #35e07a) drop-shadow(2px 0 0 rgba(0, 240, 170, 0.7));
+    transform: translate(2px, -1px);
+  }
+  20% {
+    filter: drop-shadow(3px 0 0 #35e07a) drop-shadow(-2px 0 0 rgba(0, 240, 170, 0.6));
+    transform: translate(-2px, 1px);
+    clip-path: inset(0 0 58% 0);
+  }
+  32% {
+    filter: drop-shadow(-2px 0 0 #35e07a) drop-shadow(2px 0 0 rgba(180, 255, 220, 0.6));
+    transform: translate(2px, 0);
+    clip-path: inset(46% 0 20% 0);
+  }
+  46% {
+    filter: drop-shadow(2px 0 0 rgba(53, 224, 122, 0.7));
+    transform: translate(-1px, 0);
+    clip-path: inset(0 0 0 0);
+  }
+  70% {
+    filter: drop-shadow(0 0 8px rgba(53, 224, 122, 0.35));
+    transform: none;
+  }
+  100% {
+    filter: none;
+    transform: none;
+  }
 }
 .glyph {
   display: inline-block;
   opacity: 0;
   transform: translateY(0.1em);
+  background: var(--grad-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
   animation: glyphIn 0.5s var(--ease-snap) forwards;
 }
 @keyframes glyphIn {
@@ -159,10 +199,10 @@
   display: inline-block;
   width: 0.7em;
   height: 1.05em;
-  background: var(--phosphor);
+  background: var(--accent);
   margin-left: 0.3em;
   vertical-align: text-bottom;
-  box-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
+  box-shadow: 0 0 12px var(--glow);
   animation: blink 1s steps(1) infinite;
 }
 @keyframes blink {
@@ -210,5 +250,10 @@
 .reduced .glyph {
   animation: none;
   opacity: 1;
+  transform: none;
+}
+.reduced .word {
+  animation: none;
+  filter: none;
   transform: none;
 }

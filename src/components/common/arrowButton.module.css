@@ -1,0 +1,121 @@
+/* ArrowButton — reusable animated pill CTA. */
+
+.wrap {
+  display: inline-flex;
+}
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 9px 9px 9px 24px;
+  border: 1px solid var(--line-2);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(6px);
+  color: var(--fg);
+  overflow: hidden;
+  isolation: isolate;
+  transition: border-color 0.4s var(--ease-out);
+}
+.btn:hover {
+  border-color: var(--accent);
+}
+
+/* Accent fill: an expanding disc anchored on the arrow badge that wipes the
+   whole pill on hover. Clipped by the button's overflow. */
+.fill {
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: translate(50%, -50%) scale(0);
+  transition: transform 0.55s var(--ease-mech);
+}
+.btn:hover .fill {
+  transform: translate(50%, -50%) scale(14);
+}
+
+.label {
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: color 0.4s var(--ease-out), transform 0.5s var(--ease-out);
+}
+.btn:hover .label {
+  color: #060607;
+  transform: translateX(-2px);
+}
+
+/* Circular arrow badge. */
+.badge {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--accent);
+  color: #060607;
+  transition: background 0.4s var(--ease-out), color 0.4s var(--ease-out);
+}
+.btn:hover .badge {
+  background: #060607;
+  color: var(--accent);
+}
+
+/* Two arrows sit side by side; the pair shifts on hover so the first flies out
+   to the right as the second enters from the left. */
+.track {
+  position: relative;
+  width: 18px;
+  height: 18px;
+}
+.icon {
+  position: absolute;
+  inset: 0;
+  width: 18px;
+  height: 18px;
+  transition: transform 0.5s var(--ease-mech), opacity 0.5s var(--ease-mech);
+}
+/* first arrow: visible → flies out right */
+.icon:nth-child(1) {
+  transform: translateX(0);
+}
+.btn:hover .icon:nth-child(1) {
+  transform: translateX(160%);
+}
+/* second arrow: waiting off to the left → slides into place */
+.icon:nth-child(2) {
+  transform: translateX(-160%);
+}
+.btn:hover .icon:nth-child(2) {
+  transform: translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill,
+  .label,
+  .icon,
+  .badge {
+    transition: none;
+  }
+  .btn:hover .fill {
+    transform: translate(50%, -50%) scale(14);
+  }
+  .btn:hover .icon:nth-child(1) {
+    transform: translateX(0);
+  }
+  .btn:hover .icon:nth-child(2) {
+    transform: translateX(-160%);
+  }
+}
