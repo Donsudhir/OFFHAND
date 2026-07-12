@@ -45,6 +45,12 @@
   gap: clamp(28px, 4vw, 60px);
   align-items: center;
 }
+/* Grid items default to min-width:auto (= min-content), so the terminal's wide
+   monospace content would blow the 1fr track past the viewport and clip the
+   heading. min-width:0 lets the track shrink and the heading wrap normally. */
+.live > * {
+  min-width: 0;
+}
 @media (min-width: 900px) {
   .live {
     grid-template-columns: 0.8fr 1.2fr;
