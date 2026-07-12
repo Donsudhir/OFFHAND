@@ -165,6 +165,12 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   scroll-behavior: smooth;
+  /* `position: fixed` descendants (e.g. the off-canvas mobile menu parked at
+     translateX(100%)) are clipped by the viewport / <html>, not <body>, so the
+     horizontal clip must live here too — otherwise the parked panel widens the
+     page and creates a phantom horizontal scroll on small screens. `clip`
+     avoids turning <html> into a scroll container (which would break sticky). */
+  overflow-x: clip;
 }
 
 body {
